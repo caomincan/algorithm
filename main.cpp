@@ -19,7 +19,9 @@ int main(int argn, char* argv[])
 	// correct answer: 2599,2610,2947,2052,2367,2399,2029,2442,2505,3068
 	cout << "Dijkstra's shorted path: " << endl;
 	CalculateShortestPath();
-    
+    // Find stream number of median by heap
+	cout << "Find stream number of median by heap: " << endl;
+	CalculateMedianFromStream();
 	//test_heap();
 
 

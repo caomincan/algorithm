@@ -17,6 +17,6 @@ void quick_sort_problems();
 void solve_scc_problem();
 void findMinimumCut();
 void CalculateShortestPath();
-
+void CalculateMedianFromStream();
 void test_heap();
 #endif
