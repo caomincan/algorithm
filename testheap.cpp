@@ -4,7 +4,7 @@ void test_heap()
 {
 	cout << "Study of Heap: " << endl;
 	vector<int> n{ 1,10,2,22,33,50,20,99 };
-	Test::Heap myheap(n);
+	Test::Heap myheap(n, true);
 	cout << " Initial heap: " << endl;
 	myheap.print();
 	cout << "Max value: " << myheap.max() << " and its position:" << myheap.find(myheap.max()) << endl;

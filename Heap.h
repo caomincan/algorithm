@@ -10,31 +10,82 @@ namespace Test
 {
 	class Heap {
 	public:
-		Heap() : fSize(0)
+		Heap() : fSize(0), fIsMaxHeap(true)
 		{}
 
-		Heap(vector<int>& data) : fData(data.begin(), data.end()), fSize(data.size())
+		Heap(const bool isMaxHeap) : fIsMaxHeap(isMaxHeap)
+		{}
+
+		Heap(vector<int>& data, const bool isMaxHeap) : 
+			fData(data.begin(), data.end()), fSize(data.size()), fIsMaxHeap(isMaxHeap)
 		{
-			make_heap(fData.begin(), fData.end());
+			if(fIsMaxHeap) make_heap(fData.begin(), fData.end(),  less<int>());
+			else make_heap(fData.begin(), fData.end(), greater<int>());
 		}
 
-		int max() { return fData.front(); }
+		bool isEmpty() const { return fData.empty(); }
+		int size() const { return fSize; }
+
+		int max() 
+		{ 
+			if (isEmpty()) return -1;
+			if (fIsMaxHeap) return fData.front();
+			else {
+				int maxV = fData[0];
+				for (auto x : fData) {
+					if (x > maxV) maxV = x;
+				}
+				return maxV;
+			}
+		}
+
+		int min() 
+		{ 
+			if (isEmpty()) return -1;
+			if (!fIsMaxHeap) return fData.front();
+			else {
+				int minV = fData[0];
+				for (auto x : fData) {
+					if (x < minV) minV = x;
+				}
+				return minV;
+			}
+		}
+
 		void popMax()
 		{
-			pop_heap(fData.begin(), fData.end());
-			fData.pop_back();
-			fSize = fData.size();
+			if (isEmpty()) return;
+			if (fIsMaxHeap){
+				pop_heap(fData.begin(), fData.end(), less<int>());
+				fData.pop_back();
+				fSize = fData.size();
+			} else {
+				int maxV = max();
+				deleteVal(maxV);
+			}
+			
+		}
+
+		void popMin()
+		{
+			if (isEmpty()) return;
+			if (!fIsMaxHeap) {
+				pop_heap(fData.begin(), fData.end(), greater<int>());
+				fData.pop_back();
+				fSize = fData.size();
+			} else {
+				int minV = min();
+				deleteVal(minV);
+			}
 		}
 
 		void push(int val)
 		{
 			fData.push_back(val);
-			push_heap(fData.begin(), fData.end());
+			if(fIsMaxHeap) push_heap(fData.begin(), fData.end(), less<int>());
+			else push_heap(fData.begin(), fData.end(), greater<int>());
 			fSize = fData.size();
 		}
-
-		bool isEmpty() const { return fData.empty(); }
-		int size() const { return fSize; }
 
 		int find(const int val)
 		{
@@ -46,7 +97,8 @@ namespace Test
 		{
 			int idx = find(val);
 			if (idx == -1) return;
-			pop_heap(fData.begin() + idx, fData.end());
+			if(fIsMaxHeap) pop_heap(fData.begin() + idx, fData.end(), less<int>());
+			else pop_heap(fData.begin() + idx, fData.end(), greater<int>());
 			fData.pop_back();
 			fSize = fData.size();
 		}
@@ -92,6 +144,7 @@ namespace Test
 	private:
 		vector<int> fData;
 		int fSize;
+		bool fIsMaxHeap;
 
 		void swap(vector<int>& data, int i, int j)
 		{
