@@ -23,6 +23,9 @@ int main(int argn, char* argv[])
 	cout << "Find stream number of median by heap: " << endl;
 	CalculateMedianFromStream();
 	//test_heap();
+	// Find variant number of sum
+	cout << "The number of target values tt: " << endl;
+	cout << findNumberOfTwoSum();
 
 
 	return 1;

@@ -18,5 +18,6 @@ void solve_scc_problem();
 void findMinimumCut();
 void CalculateShortestPath();
 void CalculateMedianFromStream();
+int findNumberOfTwoSum();
 void test_heap();
 #endif
