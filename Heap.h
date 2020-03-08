@@ -24,7 +24,7 @@ namespace Test
 		}
 
 		bool isEmpty() const { return fData.empty(); }
-		int size() const { return fSize; }
+		int size() const { return static_cast<int>(fSize); }
 
 		int max() 
 		{ 
@@ -90,7 +90,7 @@ namespace Test
 		int find(const int val)
 		{
 			auto it = std::find(fData.begin(), fData.end(), val);
-			return it == fData.end() ? -1 : it - fData.begin();
+			return it == fData.end() ? -1 : static_cast<int>(it - fData.begin());
 		}
 
 		void deleteVal(const int val)
@@ -143,7 +143,7 @@ namespace Test
 		}
 	private:
 		vector<int> fData;
-		int fSize;
+		size_t fSize;
 		bool fIsMaxHeap;
 
 		void swap(vector<int>& data, int i, int j)

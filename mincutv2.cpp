@@ -3,6 +3,8 @@
 #include <cstdlib>
 #include <sstream>
 
+using uint = unsigned int;
+
 struct Edge {
 	Edge(int src, int dst) :
 		fSrc(src), fDst(dst)
@@ -26,7 +28,7 @@ public:
 		fEdges.push_back(Edge(src,dst));
 	}
 
-	int getNumEdges() const { return fEdges.size(); }
+	int getNumEdges() const { return static_cast<int>(fEdges.size()); }
 
 	void contraction() 
 	{
@@ -102,7 +104,7 @@ void readData(Graph& graph, const char* textfile) {
 }
 
 void findMinimumCut() {
-	srand(time(NULL));
+	srand(static_cast<uint>(time(NULL)));
 	const int num = 200;
 	Graph originalGraph(num);
 	readData(originalGraph, "kargerMinCut.txt");

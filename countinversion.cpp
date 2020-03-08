@@ -65,7 +65,7 @@ void count_inversion()
             nums.push_back(stoi(line));
         }
         cout << "size of input : " << nums.size() << endl;
-        long long res = countInversion(nums, 0, nums.size() - 1);
+        long long res = countInversion(nums, 0, static_cast<int>(nums.size()) - 1);
         cout << " results : " << res << endl;
     }
 }

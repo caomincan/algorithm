@@ -5,6 +5,7 @@
 #include <algorithm>
 #include "utils.h"
 
+#define I static_cast<int>
 using namespace std;
 
 int pivotLastElement(int st, int ed) {
@@ -92,19 +93,19 @@ void quick_sort_problems() {
 	vector<int> nums2(nums1); vector<int> nums3(nums1);
 	int count = 0;
 	// first
-	quick_sort_first(nums1, 0, nums1.size() - 1, count);
+	quick_sort_first(nums1, 0, I(nums1.size()) - 1, count);
 	cout << " pivot is 1st comparision: " << count << endl;
 	cout << " is sorted? " << (isSorted(nums1) ? "YES" : "NO") << endl;
 
 	// second
 	int count2 = 0;
-	quick_sort_last(nums2, 0, nums2.size() - 1, count2);
+	quick_sort_last(nums2, 0, I(nums2.size()) - 1, count2);
 	cout << " pivot is last comparision: " << count2 << endl;
 	cout << " is sorted? " << (isSorted(nums2) ? "YES" : "NO") << endl;
 
 	// median
 	int count3 = 0;
-	quick_sort_median(nums3, 0, nums3.size() - 1, count3);
+	quick_sort_median(nums3, 0, I(nums3.size()) - 1, count3);
 	cout << " pivot is median comparision: " << count3 << endl;
 	cout << " is sorted? " << (isSorted(nums3) ? "YES" : "NO") << endl;
 

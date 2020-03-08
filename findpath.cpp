@@ -1,7 +1,7 @@
 #include "utils.h"
 #include <assert.h>
 
-class Edge;
+struct Edge;
 using GRAPH = vector<Edge>;
 
 struct Edge {
@@ -120,7 +120,7 @@ bool CreateGraph(vector<shared_ptr<Node>>& graph, vector<int>& dist, const int n
 
 void CalculateDijkstraShortestPath(vector<shared_ptr<Node>>& graph)
 {
-    const int n = graph.size();
+    const int n = static_cast<int>(graph.size());
     // initlized first node and rest node's key
     graph[1]->markFinished();
     graph[1]->setDistance(0);
