@@ -8,6 +8,7 @@
 using namespace std;
 namespace Test
 {
+    template<class T>
 	class Heap {
 	public:
 		Heap() : fSize(0), fIsMaxHeap(true)
@@ -16,17 +17,17 @@ namespace Test
 		Heap(const bool isMaxHeap) : fIsMaxHeap(isMaxHeap)
 		{}
 
-		Heap(vector<int>& data, const bool isMaxHeap) : 
+		Heap(vector<T>& data, const bool isMaxHeap) : 
 			fData(data.begin(), data.end()), fSize(data.size()), fIsMaxHeap(isMaxHeap)
 		{
-			if(fIsMaxHeap) make_heap(fData.begin(), fData.end(),  less<int>());
-			else make_heap(fData.begin(), fData.end(), greater<int>());
+			if(fIsMaxHeap) make_heap(fData.begin(), fData.end(),  less<T>());
+			else make_heap(fData.begin(), fData.end(), greater<T>());
 		}
 
 		bool isEmpty() const { return fData.empty(); }
 		int size() const { return static_cast<int>(fSize); }
 
-		int max() 
+		T max() 
 		{ 
 			if (isEmpty()) return -1;
 			if (fIsMaxHeap) return fData.front();
@@ -39,12 +40,12 @@ namespace Test
 			}
 		}
 
-		int min() 
+		T min() 
 		{ 
 			if (isEmpty()) return -1;
 			if (!fIsMaxHeap) return fData.front();
 			else {
-				int minV = fData[0];
+				T minV = fData[0];
 				for (auto x : fData) {
 					if (x < minV) minV = x;
 				}
@@ -56,11 +57,11 @@ namespace Test
 		{
 			if (isEmpty()) return;
 			if (fIsMaxHeap){
-				pop_heap(fData.begin(), fData.end(), less<int>());
+				pop_heap(fData.begin(), fData.end(), less<T>());
 				fData.pop_back();
 				fSize = fData.size();
 			} else {
-				int maxV = max();
+				T maxV = max();
 				deleteVal(maxV);
 			}
 			
@@ -70,7 +71,7 @@ namespace Test
 		{
 			if (isEmpty()) return;
 			if (!fIsMaxHeap) {
-				pop_heap(fData.begin(), fData.end(), greater<int>());
+				pop_heap(fData.begin(), fData.end(), greater<T>());
 				fData.pop_back();
 				fSize = fData.size();
 			} else {
@@ -79,26 +80,34 @@ namespace Test
 			}
 		}
 
-		void push(int val)
+        void push(T&& val)
+        {
+            fData.push_back(val);
+			if(fIsMaxHeap) push_heap(fData.begin(), fData.end(), less<T>());
+			else push_heap(fData.begin(), fData.end(), greater<T>());
+			fSize = fData.size();
+        }
+
+		void push(T& val)
 		{
 			fData.push_back(val);
-			if(fIsMaxHeap) push_heap(fData.begin(), fData.end(), less<int>());
-			else push_heap(fData.begin(), fData.end(), greater<int>());
+			if(fIsMaxHeap) push_heap(fData.begin(), fData.end(), less<T>());
+			else push_heap(fData.begin(), fData.end(), greater<T>());
 			fSize = fData.size();
 		}
 
-		int find(const int val)
+		int find(const T& val)
 		{
 			auto it = std::find(fData.begin(), fData.end(), val);
 			return it == fData.end() ? -1 : static_cast<int>(it - fData.begin());
 		}
 
-		void deleteVal(const int val)
+		void deleteVal(const T& val)
 		{
 			int idx = find(val);
 			if (idx == -1) return;
-			if(fIsMaxHeap) pop_heap(fData.begin() + idx, fData.end(), less<int>());
-			else pop_heap(fData.begin() + idx, fData.end(), greater<int>());
+			if(fIsMaxHeap) pop_heap(fData.begin() + idx, fData.end(), less<T>());
+			else pop_heap(fData.begin() + idx, fData.end(), greater<T>());
 			fData.pop_back();
 			fSize = fData.size();
 		}
@@ -119,7 +128,7 @@ namespace Test
 			return tmp >= fSize ? -1 : tmp;
 		}
 
-		int operator[](int idx)
+		T operator[](int idx)
 		{
 			if (idx < 0 || idx >= size()) return -1;
 			return fData[idx];
@@ -142,13 +151,13 @@ namespace Test
 			cout << endl;
 		}
 	private:
-		vector<int> fData;
+		vector<T> fData;
 		size_t fSize;
 		bool fIsMaxHeap;
 
-		void swap(vector<int>& data, int i, int j)
+		void swap(vector<T>& data, T i, T j)
 		{
-			int tmp = data[i];
+			T tmp = data[i];
 			data[i] = data[j];
 			data[j] = tmp;
 		}

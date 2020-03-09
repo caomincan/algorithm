@@ -25,7 +25,7 @@ int main(int argn, char* argv[])
 	//test_heap();
 	// Find variant number of sum
 	cout << "The number of target values tt: " << endl;
-	cout << findNumberOfTwoSum();
+	//cout << findNumberOfTwoSum();
 
 
 	return 1;

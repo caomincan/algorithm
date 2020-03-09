@@ -6,8 +6,8 @@ using namespace Test;
 void CalculateMedianFromStream()
 {
 	ifstream data("Median.txt");
-	Heap maxHeap(true);  // take care left side
-	Heap minHeap(false); // take care right side
+	Heap<int> maxHeap(true);  // take care left side
+	Heap<int> minHeap(false); // take care right side
 	int medianMod = 0;
 	if (data.is_open()){
 		string line;
