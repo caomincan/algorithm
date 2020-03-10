@@ -29,10 +29,10 @@ namespace Test
 
 		T max() 
 		{ 
-			if (isEmpty()) return -1;
+			if (isEmpty()) return T();
 			if (fIsMaxHeap) return fData.front();
 			else {
-				int maxV = fData[0];
+				T maxV = fData[0];
 				for (auto x : fData) {
 					if (x > maxV) maxV = x;
 				}
@@ -42,7 +42,7 @@ namespace Test
 
 		T min() 
 		{ 
-			if (isEmpty()) return -1;
+			if (isEmpty()) return T();
 			if (!fIsMaxHeap) return fData.front();
 			else {
 				T minV = fData[0];
@@ -75,7 +75,7 @@ namespace Test
 				fData.pop_back();
 				fSize = fData.size();
 			} else {
-				int minV = min();
+				T minV = min();
 				deleteVal(minV);
 			}
 		}

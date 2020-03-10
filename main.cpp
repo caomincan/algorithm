@@ -19,14 +19,16 @@ int main(int argn, char* argv[])
 	// correct answer: 2599,2610,2947,2052,2367,2399,2029,2442,2505,3068
 	cout << "Dijkstra's shorted path: " << endl;
 	CalculateShortestPath();
-    // Find stream number of median by heap
+    // Find stream number of median by heap  1213
 	cout << "Find stream number of median by heap: " << endl;
 	CalculateMedianFromStream();
 	//test_heap();
-	// Find variant number of sum
+	// Find variant number of sum : 427
 	cout << "The number of target values tt: " << endl;
-	//cout << findNumberOfTwoSum();
+	//cout << " The number of variant t is: " << findNumberOfTwoSum() << endl;
+    cout << "Find the weighted compilation time: " << endl;
+    CalculateCompletionTimes();
 
-
+    getchar();
 	return 1;
 }

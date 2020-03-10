@@ -20,4 +20,5 @@ void CalculateShortestPath();
 void CalculateMedianFromStream();
 int findNumberOfTwoSum();
 void test_heap();
+void CalculateCompletionTimes();
 #endif
