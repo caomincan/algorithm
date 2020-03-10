@@ -21,4 +21,5 @@ void CalculateMedianFromStream();
 int findNumberOfTwoSum();
 void test_heap();
 void CalculateCompletionTimes();
+void findMST();
 #endif

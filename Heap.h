@@ -14,7 +14,7 @@ namespace Test
 		Heap() : fSize(0), fIsMaxHeap(true)
 		{}
 
-		Heap(const bool isMaxHeap) : fIsMaxHeap(isMaxHeap)
+		Heap(const bool isMaxHeap) : fSize(0),fIsMaxHeap(isMaxHeap)
 		{}
 
 		Heap(vector<T>& data, const bool isMaxHeap) : 
@@ -79,16 +79,15 @@ namespace Test
 				deleteVal(minV);
 			}
 		}
-
         void push(T&& val)
-        {
-            fData.push_back(val);
+		{
+			fData.push_back(val);
 			if(fIsMaxHeap) push_heap(fData.begin(), fData.end(), less<T>());
 			else push_heap(fData.begin(), fData.end(), greater<T>());
 			fSize = fData.size();
-        }
+		}
 
-		void push(T& val)
+		void push(const T& val)
 		{
 			fData.push_back(val);
 			if(fIsMaxHeap) push_heap(fData.begin(), fData.end(), less<T>());

@@ -52,9 +52,8 @@ public:
         return fDistance[src] + fHeapKey->fWeight;
     }
     Edge* getSelectedEdge() { return fHeapKey.get(); }
-    void setHeapKey(Edge edge) {
-        auto e = new Edge(edge);
-        fHeapKey.reset(move(e));
+    void setHeapKey(const Edge& edge) {
+        fHeapKey.reset(new Edge(edge));
     }
 
     bool isFinished() const { return fIsFinished; }

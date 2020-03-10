@@ -1,6 +1,4 @@
 #include "utils.h"
-#include <iostream>
-#include "Heap.h"
 
 using namespace std;
 int main(int argn, char* argv[])
@@ -28,7 +26,9 @@ int main(int argn, char* argv[])
 	//cout << " The number of variant t is: " << findNumberOfTwoSum() << endl;
     cout << "Find the weighted compilation time: " << endl;
     CalculateCompletionTimes();
-
+    // Find Minimum Spanning Tree:
+    cout << "Find minimum spanning tree from graph: " << endl;
+    findMST();
     getchar();
 	return 1;
 }
