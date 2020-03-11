@@ -24,9 +24,10 @@ int main(int argn, char* argv[])
 	// Find variant number of sum : 427
 	cout << "The number of target values tt: " << endl;
 	//cout << " The number of variant t is: " << findNumberOfTwoSum() << endl;
+	// correct answer: w-l 69119377652  w/l 67311454237
     cout << "Find the weighted compilation time: " << endl;
     CalculateCompletionTimes();
-    // Find Minimum Spanning Tree:
+    // Find Minimum Spanning Tree: -3612829
     cout << "Find minimum spanning tree from graph: " << endl;
     findMST();
     getchar();

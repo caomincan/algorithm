@@ -1,6 +1,8 @@
 #include "utils.h"
-#include <assert.h>
-
+#include "Heap.h"
+enum VISIT{
+    YES,NO
+};
 class Edge {
 public:
     Edge(int s,int d,int w):
@@ -12,56 +14,19 @@ public:
     int dst;
     int weight;
     friend bool operator<(const Edge& e1, const Edge& e2) { return e1.weight < e2.weight; }
+    friend bool operator>(const Edge& e1, const Edge& e2) { return e1.weight > e2.weight; }
+    friend bool operator==(const Edge& e1, const Edge& e2) 
+    { 
+        return e1.src == e2.src &&
+            e1.dst == e2.dst &&
+            e1.weight == e2.weight; 
+    }
 };
 
 bool compareEdge(const Edge* e1, const Edge* e2) { return e1->weight < e2->weight; }
 
-class Node {
-public:
-    Node(int label) :
-        fLabel(label),
-        fKey(-1,-1, INT_MAX)
-    {}
 
-    Node() : fLabel(-1), fKey(-1,-1, INT_MAX) {}
-    ~Node()
-    {}
-
-    Node(const Node&) = default;
-    Node& operator=(const Node&) = default;
-
-    Edge& getKey() { return fKey; }
-    void  setKey(const Edge& e) { fKey = e; }
-    int getLabel() const { return fLabel; }
-    void setLabel(int label) { fLabel = label; }
-    void insertEdge(Edge e) { fEdges.push_back(e); }
-    vector<Edge>& getEdges() { return fEdges; }
-
-    friend bool operator<(const Node& n1, const Node& n2) { return n1.getKeyValue() < n1.getKeyValue(); }
-    friend bool operator>(const Node& n1, const Node& n2) { return n2.getKeyValue() > n2.getKeyValue(); }
-    bool operator==(const Node& other) const { return getLabel() == other.getLabel(); }
-
-    void initKey() {
-        sort(fEdges.begin(), fEdges.end(), less<Edge>());
-        assert(fEdges.size() >= 1);
-        setKey(fEdges[0]);
-    }
-
-protected:
-    int getKeyValue() const
-    {
-        return fKey.src!=-1 ? fKey.weight : INT_MAX;
-    }
-
-private:
-    int fLabel;
-    Edge fKey;
-    vector<Edge> fEdges;
-    
-};
-
-
-bool ReadGraph(vector<Node>& graph,  const char* datafile)
+bool ReadGraph(unordered_map<int, vector<Edge>>& graph, const char* datafile)
 {
     ifstream data(datafile);
     if (data.is_open())
@@ -72,11 +37,6 @@ bool ReadGraph(vector<Node>& graph,  const char* datafile)
         while (idx < line.size() && line[idx] != ' ') idx++;
         const int n = stoi(line.substr(0, idx));
         const int m = stoi(line.substr(idx + 1));
-        graph.push_back(Node(0));
-        for (int i = 1; i <= n; i++)
-        {
-            graph.push_back(Node(i));
-        }
         // reading edges
         while (getline(data, line)) {
             idx = 0;
@@ -87,27 +47,97 @@ bool ReadGraph(vector<Node>& graph,  const char* datafile)
             while (line[idx] != ' ') { idx++;}
             int dst = stoi(line.substr(st, idx));
             int w = stoi(line.substr(idx+1));
-   
-            graph[src].insertEdge(Edge(src,dst,w));
-            graph[dst].insertEdge(Edge(dst,src,w));
+            auto n = graph.find(src);
+            Edge e(src, dst, w);
+            if (n == graph.end()) {
+                vector<Edge> tmp(1,e);
+                graph.insert(make_pair(src, tmp));
+            } else {
+                n->second.push_back(e);
+            }
+            n = graph.find(dst);
+            Edge d(dst, src, w);
+            if (n == graph.end()) {
+                vector<Edge> tmp(1, d);
+                graph.insert(make_pair(dst, tmp));
+            }
+            else {
+                n->second.push_back(d);
+            }
         }
-        for (auto it = graph.begin() + 1; it != graph.end(); ++it) it->initKey();
         return true;
     }
     return false;
 }
 
+long long findCost(unordered_map<int, vector<Edge>>& g)
+{
+    long long cost = 0;
+    unordered_set<int> memo;
+    for (auto p : g)
+    {
+        if (memo.find(p.first) != memo.end()) continue;
+        memo.insert(p.first);
+        for (auto& e : p.second) {
+            if (memo.find(e.dst) != memo.end()) {
+                cost += e.weight;
+                memo.insert(e.dst);
+            }
+        }
+    }
+
+    return cost;
+}
+
+void insertEdgeToTree(unordered_map<int, vector<Edge>>& tree, const Edge& e)
+{
+    auto src = tree.find(e.src);
+    auto dst = tree.find(e.dst);
+    if (src == tree.end()) {
+        vector<Edge> tmp(1, e);
+        tree.insert(make_pair(e.src, tmp));
+    }
+    else {
+        src->second.push_back(e);
+    }
+    Edge rev(e.dst, e.src, e.weight);
+    if (dst == tree.end()) {
+        vector<Edge> tmp(1, rev);
+        tree.insert(make_pair(rev.src, tmp));
+    }
+    else {
+        dst->second.push_back(rev);
+    }
+}
 void findMST()
 {
-    vector<Node> graph;
+    unordered_map<int, vector<Edge>> graph;
+    unordered_map<int, vector<Edge>> tree;
+    long long cost = 0;
     //vector<shared_ptr<Node>> tree;
-    if (ReadGraph(graph,  "edges.txt")) {
+    if (ReadGraph(graph, "edges.txt")) {
         // init heap
-        Test::Heap<Node> selection(false);
-        for (int i = 1; i < graph.size(); i++) {
-            selection.push(Node(graph.at(i)));
+        unordered_set<int> v; v.insert(1);
+        Test::Heap<Edge> heap(false);
+        for (auto e : graph[1]) { heap.push(e);}
+        // start working
+        while (!heap.isEmpty())
+        {
+            Edge e = heap.min(); heap.popMin();
+            v.insert(e.src);
+            v.insert(e.dst);
+            insertEdgeToTree(tree, e);
+            heap.clear();
+            for (auto p : graph)
+            {
+                if (v.find(p.first) != v.end()) continue;
+                for (auto& e : p.second) {
+                    if (v.find(e.dst) != v.end()) {
+                        heap.push(e);
+                    }
+                }
+            }
         }
-          
     }
-    cout << "The total cost of MST: ";
+    cout << "The total cost of MST: " << findCost(tree) << endl;
 }

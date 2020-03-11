@@ -4,6 +4,7 @@
 #include <vector>
 #include <algorithm>
 #include <iostream>
+#include <assert.h>
 
 using namespace std;
 namespace Test
@@ -79,20 +80,12 @@ namespace Test
 				deleteVal(minV);
 			}
 		}
-        void push(T&& val)
+        void push(T val)
 		{
 			fData.push_back(val);
-			if(fIsMaxHeap) push_heap(fData.begin(), fData.end(), less<T>());
-			else push_heap(fData.begin(), fData.end(), greater<T>());
 			fSize = fData.size();
-		}
-
-		void push(const T& val)
-		{
-			fData.push_back(val);
 			if(fIsMaxHeap) push_heap(fData.begin(), fData.end(), less<T>());
-			else push_heap(fData.begin(), fData.end(), greater<T>());
-			fSize = fData.size();
+			else push_heap(fData.begin(), fData.end(), greater<T>());			
 		}
 
 		int find(const T& val)
@@ -127,14 +120,27 @@ namespace Test
 			return tmp >= fSize ? -1 : tmp;
 		}
 
-		T operator[](int idx)
+		T& operator[](int idx)
 		{
-			if (idx < 0 || idx >= size()) return -1;
-			return fData[idx];
+			if (idx < 0 || idx >= size()) assert(false);
+			return fData.at(idx);
+		}
+
+		void remake_heap()
+		{
+			if (fIsMaxHeap) make_heap(fData.begin(), fData.end(), less<T>());
+			else make_heap(fData.begin(), fData.end(), greater<T>());
+		}
+
+		void clear()
+		{
+			fData.clear();
+			fSize = 0;
 		}
 
 		void print()
 		{
+#ifdef HEAP_NEED_PRINT
 			int level = 1;
 			int base = 2;
 			for (int i = 0; i < size(); i++)
@@ -148,18 +154,12 @@ namespace Test
 				else cout << " ";
 			}
 			cout << endl;
+#endif
 		}
 	private:
 		vector<T> fData;
 		size_t fSize;
 		bool fIsMaxHeap;
-
-		void swap(vector<T>& data, T i, T j)
-		{
-			T tmp = data[i];
-			data[i] = data[j];
-			data[j] = tmp;
-		}
 	};
 }
 

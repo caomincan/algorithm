@@ -1,5 +1,5 @@
 #include "utils.h"
-#include <assert.h>
+#include "Heap.h"
 
 using namespace Test;
 

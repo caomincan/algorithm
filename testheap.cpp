@@ -1,5 +1,6 @@
 #include "utils.h"
-
+#define HEAP_NEED_PRINT
+#include "Heap.h"
 void test_heap()
 {
 	cout << "Study of Heap: " << endl;
