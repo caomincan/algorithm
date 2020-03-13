@@ -21,4 +21,5 @@ int findNumberOfTwoSum();
 void test_heap();
 void CalculateCompletionTimes();
 void findMST();
+void findMaxSpacingCluster4();
 #endif

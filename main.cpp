@@ -30,6 +30,8 @@ int main(int argn, char* argv[])
     // Find Minimum Spanning Tree: -3612829
     cout << "Find minimum spanning tree from graph: " << endl;
     findMST();
+	// Find Maximum spacing of k-cluster: 106 
+	findMaxSpacingCluster4();
     getchar();
 	return 1;
 }
