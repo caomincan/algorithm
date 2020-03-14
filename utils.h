@@ -23,4 +23,5 @@ void CalculateCompletionTimes();
 void findMST();
 void findMaxSpacingCluster4();
 void processClustering(const char* file);
+void runHuffmanCompression();
 #endif

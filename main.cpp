@@ -37,6 +37,8 @@ int main(int argn, char* argv[])
 	// correct answer 6118
 	cout << "Find largest value of k : 6118" << endl;	
 	//processClustering("clustering_big.txt");
+	// Find maximum and minimum length of encode by Huffman alogrithm
+	runHuffmanCompression();
     getchar();
 	return 1;
 }
