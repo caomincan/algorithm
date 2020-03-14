@@ -38,7 +38,13 @@ int main(int argn, char* argv[])
 	cout << "Find largest value of k : 6118" << endl;	
 	//processClustering("clustering_big.txt");
 	// Find maximum and minimum length of encode by Huffman alogrithm
+	// max 19 min 9
 	runHuffmanCompression();
+	// of the vertices 1, 2, 3, 4, 17, 117, 517, and 997,
+	// which ones belong to the maximum-weight independent set?
+	// correct answer 10100110
+	cout << "Max-weight Independent Set: " << endl;
+	findMaximumIndependentSet();
     getchar();
 	return 1;
 }
