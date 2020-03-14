@@ -22,4 +22,5 @@ void test_heap();
 void CalculateCompletionTimes();
 void findMST();
 void findMaxSpacingCluster4();
+void processClustering(const char* file);
 #endif

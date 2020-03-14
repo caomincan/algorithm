@@ -28,10 +28,15 @@ int main(int argn, char* argv[])
     cout << "Find the weighted compilation time: " << endl;
     CalculateCompletionTimes();
     // Find Minimum Spanning Tree: -3612829
-    cout << "Find minimum spanning tree from graph: " << endl;
-    findMST();
+    cout << "Find minimum spanning tree from graph: -3612829" << endl;
+    //findMST();
 	// Find Maximum spacing of k-cluster: 106 
+	cout << "Find maximum k-cluster spacing: 106" << endl;
 	findMaxSpacingCluster4();
+	// Find largest value of k so that Hamming Distance is at least 3
+	// correct answer 6118
+	cout << "Find largest value of k : 6118" << endl;	
+	//processClustering("clustering_big.txt");
     getchar();
 	return 1;
 }
