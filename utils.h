@@ -25,4 +25,5 @@ void findMaxSpacingCluster4();
 void processClustering(const char* file);
 void runHuffmanCompression();
 void findMaximumIndependentSet();
+void solveKnapSackProblem(const char* file);
 #endif

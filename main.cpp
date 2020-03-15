@@ -45,6 +45,13 @@ int main(int argn, char* argv[])
 	// correct answer 10100110
 	cout << "Max-weight Independent Set: " << endl;
 	findMaximumIndependentSet();
+	// Knapsack algorithm
+	cout << "Solve small data set Knapsack Problem: " << endl;
+	// knapsack1 result : 2493893
+	solveKnapSackProblem("knapsack1.txt");
+	cout << "Solve big data set Knapsack Problem: " << endl;
+	// knapsack_big result : 4243395
+	// solveKnapSackProblem("knapsack_big.txt"); // memory eater
     getchar();
 	return 1;
 }
