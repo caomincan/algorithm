@@ -33,32 +33,33 @@ Graph ReadGraph(const char* file)
 	}
 }
 
-bool FloydWarshallAlgorithm(Graph& graph, vector<Graph>& dp)
+bool FloydWarshallAlgorithm(Graph& graph)
 {
 	
 	const int n = static_cast<int>(graph.size()) - 1;
-	for (int k = 1; k <= n; k++) {				
+	for (int k = 0; k <= n; k++) {	
+		auto dp = graph;
 		for (int i = 1; i <= n; i++){
 			for (int j = 1; j <= n; j++) {
-				long long preValue = dp[k - 1][i][j];
-				long long viaK = dp[k - 1][i][k] + dp[k - 1][k][j];
-				dp[k][i][j]= min(preValue, viaK);
-				if (i == j && k== n && dp[k][i][j] < 0) return false;
+				long long preValue = dp[i][j];
+				long long viaK = dp[i][k] + dp[k][j];
+				graph[i][j]= min(preValue, viaK);
+				if (i == j && graph[i][j] < 0) return false;
 			}
 		}
 	}
 	return true;
 }
 
-long long findMinimumPath(vector<Graph>& dp)
+long long findMinimumPath(Graph& graph)
 {
-	const int n = static_cast<int>(dp.size()) - 1;
+	const int n = static_cast<int>(graph.size()) - 1;
 	long long path = INT_MAX;
 	for (int i = 1; i <= n; i++) {
 		for (int j = 1; j <= n; j++) {
 			if (i == j) continue;
-			if (dp[n][i][j] < path) {
-				path = dp[n][i][j];
+			if (graph[i][j] < path) {
+				path = graph[i][j];
 			}
 		}
 	}
@@ -68,9 +69,8 @@ long long findMinimumPath(vector<Graph>& dp)
 void computerAllPairPath(const char* file)
 {
 	auto graph = ReadGraph(file);
-	vector<Graph> dp(graph.size(), graph);
-	if (FloydWarshallAlgorithm(graph,dp)) {
-		long long minPath = findMinimumPath(dp);
+	if (FloydWarshallAlgorithm(graph)) {
+		long long minPath = findMinimumPath(graph);
 		cout << "Minimum path: " << minPath << endl;
 	}
 	else {

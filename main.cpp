@@ -55,9 +55,13 @@ int main(int argn, char* argv[])
 	// solveKnapSackProblem("knapsack_big.txt"); // memory eater
 	// All-pair shorted path
 	//  g1&g2 negative cycle g3 -19
-	computerAllPairPath("g1.txt");
-	computerAllPairPath("g2.txt");
-	computerAllPairPath("g3.txt");
+	//computerAllPairPath("g1.txt");
+	//computerAllPairPath("g2.txt");
+	//computerAllPairPath("g3.txt");
+	// Johnson algorithm
+	CalculateAllPairShortestPath(1000, "g1.txt");
+	CalculateAllPairShortestPath(1000, "g2.txt");
+	CalculateAllPairShortestPath(1000, "g3.txt");
     getchar();
 	return 1;
 }

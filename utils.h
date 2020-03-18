@@ -33,4 +33,5 @@ void runHuffmanCompression();
 void findMaximumIndependentSet();
 void solveKnapSackProblem(const char* file);
 void computerAllPairPath(const char* file);
+void CalculateAllPairShortestPath(const int n, const char* file);
 #endif
