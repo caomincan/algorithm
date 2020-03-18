@@ -7,6 +7,7 @@ int main(int argn, char* argv[])
 	cout << "Count Inversion from Array: " << endl;
 	count_inversion();
 	cout << "Count number of comparision from quick sort: " << endl;
+	// Q1 162085 Q2 164123 Q3 138382
 	quick_sort_problems();
 	cout << "5 largest SCC: 434821 968 459 313 211" << endl;
 	//solve_scc_problem();

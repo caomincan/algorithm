@@ -32,8 +32,8 @@ bool compareEdge(const Edge& e1, const Edge& e2)
 
 class Node {
 public:
-    Node(const int label, vector<int>& dist) :
-        fLabel(label),
+    Node(const int id, vector<int>& dist) :
+        fId(id),
         fIsFinished(false),
         fDistance(dist)
     {
@@ -41,46 +41,44 @@ public:
 
     ~Node() = default;
 
-    int getLabel() const { return fLabel; }
+    int id() const { return fId; }
 
-    vector<Edge>& getEdges() { return fEdges; }
-    vector<shared_ptr<Node>>& getPath() { return fPath; }
+    vector<Edge*>& getEdges() { return fEdges; }
+    vector<Node*>& getPath() { return fPath; }
 
-    int getHeapKey() const { 
-        if (!fHeapKey || fHeapKey->fSrc == -1) return INT_MAX;
-        int src = fHeapKey->fSrc;
-        return fDistance[src] + fHeapKey->fWeight;
+    int getKeyValue() const { 
+        if (!fKey || fKey->fSrc == -1) return INT_MAX;
+        int src = fKey->fSrc;
+        return fDistance[src] + fKey->fWeight;
     }
-    Edge* getSelectedEdge() { return fHeapKey.get(); }
-    void setHeapKey(const Edge& edge) {
-        fHeapKey.reset(new Edge(edge));
-    }
+    Edge* getKey() { return fKey; }
+    void setKey(Edge* edge) { fKey = edge;}
 
     bool isFinished() const { return fIsFinished; }
     void markFinished() { fIsFinished = true; }
 
     vector<int>& getDistanceTable() { return fDistance; }
     int getDistance() const {
-        return fDistance[fLabel];
+        return fDistance[fId];
     }
     void setDistance(int d) {
-        fDistance[fLabel] = d;
+        fDistance[fId] = d;
     }
 
 private:
-    int fLabel;
+    int fId;
     bool fIsFinished;
-    unique_ptr<Edge> fHeapKey;
-    vector<Edge> fEdges;
-    vector<shared_ptr<Node>> fPath;
+    Edge* fKey;
+    vector<Edge*> fEdges;
+    vector<Node*> fPath;
     vector<int>& fDistance;
 };
 
-bool compareNodeInHeap(shared_ptr<Node>& p1, shared_ptr<Node>& p2) {
-    return p1->getHeapKey() > p2->getHeapKey();
+bool compareNodeInHeap(Node* p1, Node* p2) {
+    return p1->getKeyValue() > p2->getKeyValue();
 }
 
-bool CreateGraph(vector<shared_ptr<Node>>& graph, vector<int>& dist, const int numNdoes, const char* datafile)
+bool CreateGraph(vector<Node*>& graph, vector<Edge*>& edgePool, vector<int>& dist, const int numNdoes, const char* datafile)
 {
     assert(graph.size() == numNdoes + 1);
     ifstream data(datafile);
@@ -92,7 +90,7 @@ bool CreateGraph(vector<shared_ptr<Node>>& graph, vector<int>& dist, const int n
             while (line[idx] != '\t') { idx++; }
             int label = stoi(line.substr(0, idx));
             Node* node = new Node(label, dist);
-            graph[label].reset(node);
+            graph[label] = node;
             //cout << "Node: " << label << " ";
             // reading edges and weights
             while (idx < line.size()) {
@@ -105,7 +103,9 @@ bool CreateGraph(vector<shared_ptr<Node>>& graph, vector<int>& dist, const int n
                     if (edge[i] == ',') {
                         int dst = stoi(edge.substr(0, i));
                         int w = stoi(edge.substr(i + 1));
-                        node->getEdges().push_back(Edge(label, dst, w));
+                        Edge* edge = new Edge(label, dst, w);
+                        edgePool.push_back(edge);
+                        node->getEdges().push_back(edge);
                         break;
                     }
                 }
@@ -117,7 +117,7 @@ bool CreateGraph(vector<shared_ptr<Node>>& graph, vector<int>& dist, const int n
     return false;
 }
 
-void CalculateDijkstraShortestPath(vector<shared_ptr<Node>>& graph)
+void CalculateDijkstraShortestPath(vector<Node*>& graph)
 {
     const int n = static_cast<int>(graph.size());
     // initlized first node and rest node's key
@@ -125,10 +125,10 @@ void CalculateDijkstraShortestPath(vector<shared_ptr<Node>>& graph)
     graph[1]->setDistance(0);
     auto dsts = graph[1]->getEdges();
     for (auto& e : dsts) {
-        graph[e.fDst]->setHeapKey(e);
+        graph[e->fDst]->setKey(e);
     }
     // initlize heap 
-    vector<shared_ptr<Node>> heap(graph.begin() + 2, graph.end());
+    vector<Node*> heap(graph.begin() + 2, graph.end());
     make_heap(heap.begin(), heap.end(), compareNodeInHeap);
 
     // start loop util heap is empty
@@ -137,23 +137,23 @@ void CalculateDijkstraShortestPath(vector<shared_ptr<Node>>& graph)
         auto w = heap.front();
         // pop out selected node
         pop_heap(heap.begin(), heap.end()); heap.pop_back();
-        auto lvw= w->getSelectedEdge();
+        auto lvw= w->getKey();
         // update node's shortest path value and path
         auto v = graph[lvw->fSrc];
-        assert(lvw->fDst == w->getLabel());
+        assert(lvw->fDst == w->id());
         // update result of w
         auto wPath(v->getPath()); wPath.push_back(w);
         w->setDistance(v->getDistance() + lvw->fWeight);
         w->getPath() = wPath;
         w->markFinished();
         // RELAX
-        for (auto& edge : w->getEdges()) {
-            assert(edge.fSrc == w->getLabel());
-            auto x = graph[edge.fDst];
+        for (auto edge : w->getEdges()) {
+            assert(edge->fSrc == w->id());
+            auto x = graph[edge->fDst];
             // x still inside unfinished set
-            if (!x->isFinished() &&  (w->getDistance() + edge.fWeight) < x->getHeapKey()) {
+            if (!x->isFinished() &&  (w->getDistance() + edge->fWeight) < x->getKeyValue()) {
                 // means not finish calculation and new weight is smaller
-                x->setHeapKey(edge);
+                x->setKey(edge);
             }
         }
         make_heap(heap.begin(), heap.end(), compareNodeInHeap);
@@ -163,9 +163,10 @@ void CalculateDijkstraShortestPath(vector<shared_ptr<Node>>& graph)
 void CalculateShortestPath()
 {
     const int n = 200;
-    vector<shared_ptr<Node>> graph(n + 1);
+    vector<Node*> graph(n + 1, nullptr);
+    vector<Edge*> pool;
     vector<int> dist(n + 1, INT_MAX);
-    if (CreateGraph(graph, dist, n, "dijkstraData.txt")) {
+    if (CreateGraph(graph, pool, dist, n, "dijkstraData.txt")) {
         CalculateDijkstraShortestPath(graph);
     }
     else {
@@ -179,6 +180,8 @@ void CalculateShortestPath()
         cout << dist[id] << ",";
     }
     cout << endl;
+    for (auto n : graph) { if (n) delete n; }
+    for (auto e : pool) { if (e) delete e; }
 }
 
 #if 0
