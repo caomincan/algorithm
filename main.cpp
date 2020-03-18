@@ -50,9 +50,14 @@ int main(int argn, char* argv[])
 	cout << "Solve small data set Knapsack Problem: " << endl;
 	// knapsack1 result : 2493893
 	solveKnapSackProblem("knapsack1.txt");
-	cout << "Solve big data set Knapsack Problem: " << endl;
+	cout << "Solve big data set Knapsack Problem: 4243395" << endl;
 	// knapsack_big result : 4243395
 	// solveKnapSackProblem("knapsack_big.txt"); // memory eater
+	// All-pair shorted path
+	//  g1&g2 negative cycle g3 -19
+	computerAllPairPath("g1.txt");
+	computerAllPairPath("g2.txt");
+	computerAllPairPath("g3.txt");
     getchar();
 	return 1;
 }

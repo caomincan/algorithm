@@ -11,6 +11,12 @@
 using namespace std;
 void swap(vector<int>& nums, int i, int j);
 
+inline int findSpace(string& line, int cur)
+{
+	while (cur < line.size() && line[cur] != ' ') { cur++; }
+	return cur;
+}
+
 void count_inversion();
 void quick_sort_problems();
 void solve_scc_problem();
@@ -26,4 +32,5 @@ void processClustering(const char* file);
 void runHuffmanCompression();
 void findMaximumIndependentSet();
 void solveKnapSackProblem(const char* file);
+void computerAllPairPath(const char* file);
 #endif
